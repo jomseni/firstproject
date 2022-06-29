@@ -1,0 +1,22 @@
+{{>layouts/header}}
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Title</th>
+        <th scope="col">Content</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#articleList}}    <!--Entity를 가져옴! 모델에 등록된 데이터는 #으로 가져올 수 있음!! 해당변수가 묶음이면 계속 아래부분이 반복되어진다고 생각!!!-->
+    <tr>
+        <th>{{id}}</th>   <!--선언한거랑 같은 스펠링적어야함!-->
+        <td>{{title}}</td>
+        <td>{{content}}</td>
+    </tr>
+    {{/articleList}}  <!--article을 여기까지 쓸거야!-->
+    </tbody>
+</table>
+
+<a href="/articles/new">New Articles</a>
+{{>layouts/footer}}
