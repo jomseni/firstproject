@@ -42,7 +42,7 @@ public class ArticleController {
         //System.out.println(saved.toString());         //article이 잘 save가 되었는지 확인!
         return "redirect:/articles/" + saved.getId();          //리다이렉트 적용 부분!
     }
-
+    // 아랫 부분은 데이터 목록 조회하기!
     @GetMapping("/articles/{id}")   //id는 변수 이다! 넣어지는 숫자에 따라 다른것 적용! id 값을 컨트롤러에서 받아온다
     public String show(@PathVariable Long id, Model model){   //위의 url주소로 부터 id 변수를 가져온다! => pathVariable
         log.info("id = " + id );        //로그를 통해서 id 1000번이  잘 받아진걸 볼 수 있다!
