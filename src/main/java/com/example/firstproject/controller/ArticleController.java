@@ -73,4 +73,16 @@ public class ArticleController {
         //3. 뷰 페이지를 설정한다.
         return "articles/index";                  //뷰페이지를 설정하는 코드! articles/index.mustache
     }
+
+    //컨트롤러가 edit 페이지의 url을 요청을 받는 부분!
+    @GetMapping("/articles/{id}/edit") //중괄호를 하나만 써야 변수를 받아 올수있는것이다! pathvariable의 변수 id 와  변수 id 이름이 같아야 적용이 된다!!매우중요!! 여기부분 오타 조심!!!
+    public String edit(@PathVariable Long id, Model model){  //아래 findById(id) 값이 빨간색이고 그 id를 url 에서 가져오므로 @PathVariable을 사용
+        //수정할 데이터를 가져와야한다(repository를 통해서)! 왜냐하면 원래데이터를 수정해야하는것이므로 기본 데이터를 보여줘야한다!
+        Article articleEntity = articleRepository.findById(id).orElse(null); //id값을 url요청으로 던짐! 만약에 없다면 null을 반환한다.
+
+        //모델에 데이터를 등록한다!(뷰 페이지에 사용할 수 있게!) 파라미터에 model 선언
+        model.addAttribute("article", articleEntity); //이름을 article으로 한다. 앞에서 가져온 articleEntity 을!
+        //뷰페이지설정 . 컨트롤러가 해당 요청을받으면!!!!이렇게 return값으로 반환한다!
+        return "articles/edit"; //수정 페이지를 응답으로 반환해야한다!
+    }
 }

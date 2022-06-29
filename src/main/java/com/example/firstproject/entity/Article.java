@@ -13,8 +13,9 @@ import javax.persistence.Id;
 @Entity // DB가 해당 객체를 인식가능!! 테이블로작성!
 @AllArgsConstructor   //생성자를 대신한다.
 @ToString
+@Getter
 @NoArgsConstructor   //디폴트를 생성자를 추가!!!!!!!!
-@Getter             //리다이렉트에서겟터가 필요한ㄷ ㅔ 그부분 말고 모든 게터를 사용하기위해 이걸로써줌
+             //리다이렉트에서겟터가 필요한ㄷ ㅔ 그부분 말고 모든 게터를 사용하기위해 이걸로써줌
 public class Article {
 
     @Id //대표값을 지정! like a 주민등록번호
@@ -26,8 +27,6 @@ public class Article {
 
     @Column
     private String content;
-
-
 
     //여기까지가 entity 클래스를 선언한 것!
 
