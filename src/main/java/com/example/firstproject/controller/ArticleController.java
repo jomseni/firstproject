@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @Slf4j //로깅을 위한 골뱅이(어노테이션)이다!!!
@@ -84,5 +85,28 @@ public class ArticleController {
         model.addAttribute("article", articleEntity); //이름을 article으로 한다. 앞에서 가져온 articleEntity 을!
         //뷰페이지설정 . 컨트롤러가 해당 요청을받으면!!!!이렇게 return값으로 반환한다!
         return "articles/edit"; //수정 페이지를 응답으로 반환해야한다!
+    }
+
+    @PostMapping("/articles/update") //여기로 던지기로함!
+    public String update(ArticleForm form){ //DTO로 받아오기
+        //id 값을 추가 시켰기 때문에!Articleform에! 따라서 DTO에도 id를 추가
+        //터미널에 해당 id 를 수정했을때 잘 수정 되었는지 확인한다
+        log.info(form.toString());
+
+        //1 . DTO로 받아왔으니 엔티티로 변환한다
+        Article articleEntity = form.toEntity();
+        log.info(articleEntity.toString());
+        //2 . 엔티티를 DB로 저장한다.! 생성하는 것이 아니라 기본적으로 있던 것을 수정하는 것이므로 생성할때와 과정이 다르다 두가지로 나누어짐!
+
+        //2-1 : DB에서 기존 데이터를 가져온다!
+        //articleRepository를 통해서 id에 맞는 값을 가져와서 target에 값을 반환한다. 그러나 없는 id 값이면 null 반환
+        Article target = articleRepository.findById(articleEntity.getId()).orElse(null);
+        //2-2 : 기존 데이터에 값이 있다면 값을 갱신한다.
+        if( target!= null){
+            articleRepository.save(articleEntity); //엔티티가 DB로 갱신한다
+        }
+
+        //3 . 수정결과 페이지로 리다이렉트 한다! id를 찾아 수정하면 페이지를 그 바꾼 id 번호의 웹 피이지로 이동한다!
+        return "redirect:/articles/" + articleEntity.getId();
     }
 }
