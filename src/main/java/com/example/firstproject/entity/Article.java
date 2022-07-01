@@ -25,6 +25,13 @@ public class Article {
     @Column
     private String content;
 
+    public void patch(Article article) {
+        if(article.title != null)
+            this.title = article.title;
+        if(article.content != null)
+            this.content = article.content;
+    }
+
     //여기까지가 entity 클래스를 선언한 것!
 
     //디폴트 생성자란? 파라메타가 아무것도 없는 생성자!!!!!
