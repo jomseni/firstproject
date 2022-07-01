@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +76,8 @@ public class ArticleController {
         return "articles/index";                  //뷰페이지를 설정하는 코드! articles/index.mustache
     }
 
+
+    //데이터 수정부분!!!!
     //컨트롤러가 edit 페이지의 url을 요청을 받는 부분!
     @GetMapping("/articles/{id}/edit") //중괄호를 하나만 써야 변수를 받아 올수있는것이다! pathvariable의 변수 id 와  변수 id 이름이 같아야 적용이 된다!!매우중요!! 여기부분 오타 조심!!!
     public String edit(@PathVariable Long id, Model model){  //아래 findById(id) 값이 빨간색이고 그 id를 url 에서 가져오므로 @PathVariable을 사용
@@ -86,6 +89,8 @@ public class ArticleController {
         //뷰페이지설정 . 컨트롤러가 해당 요청을받으면!!!!이렇게 return값으로 반환한다!
         return "articles/edit"; //수정 페이지를 응답으로 반환해야한다!
     }
+
+
 
     @PostMapping("/articles/update") //여기로 던지기로함!
     public String update(ArticleForm form){ //DTO로 받아오기
@@ -106,7 +111,28 @@ public class ArticleController {
             articleRepository.save(articleEntity); //엔티티가 DB로 갱신한다
         }
 
-        //3 . 수정결과 페이지로 리다이렉트 한다! id를 찾아 수정하면 페이지를 그 바꾼 id 번호의 웹 피이지로 이동한다!
+        //3 . 수정 결과 페이지로 리다이렉트 한다! id를 찾아 수정하면 페이지를 그 바꾼 id 번호의 웹 피이지로 이동한다!
         return "redirect:/articles/" + articleEntity.getId();
+    }
+
+
+    //데이터 삭제하기 부분!!!!!!!
+    @GetMapping("/articles/{id}/delete")    //delete 요청받아오기!
+    public String delete(@PathVariable Long id ,RedirectAttributes rttr){  //findById(id)부분의 id의 파라미터 찾아주기! url의 값에서 가져오기위해 이노테이션사용!
+        log.info("삭제 요청이 들어왔습니다!!");
+        //1 . 삭제 대상을 요청한다!(가져오기!)
+        //JPA에서 제공하는 리퍼즈터리를 통해서 데이터를 가져온다!
+        //대상이 있는지 우선확인한다!
+      Article target = articleRepository.findById(id).orElse(null);  //article entity를 가져온다! 반환!
+        log.info(target.toString());
+       // 2 . 그 대상을 삭제한다!
+        if( target != null){
+            articleRepository.delete(target);
+            rttr.addFlashAttribute("msg","삭제가 완료되었습니다");
+
+        }
+        //3 . 데이터 삭제 결과 목록 리다이렉트한다!
+        //delete 누르면 리다이렉트로 목록 사이트값을 반환하여 띄운다!
+        return "redirect:/articles";
     }
 }

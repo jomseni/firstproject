@@ -19,5 +19,9 @@
 </table>
 
 <a href="/articles/{{article.id}}/edit" class="btn btn-primary">Edit</a>  <!--모델에등록된 article 데이터의 id를 가져올 수 있다.-->
+<!--클라이언트에서 서버에 요청보낼 때 생성할땐 post, 조회할땐 get, 수정할땐 update, 삭제할땐 delete 요청을 보낸다고 http메서드가 있음! -->
+<!--html에선 get과 post 이외의 메서드를 호환하지않아 따라서 구현의 편의를 위해 임의로 Get,a 태그 즉, 링크를사용 나중엔 js를 이용해 delete이용할것! -->
+<a href="/articles/{{article.id}}/delete" class="btn btn-danger">Delete</a>
 <a href="/articles">Go to Article List</a>
+
 {{>layouts/footer}}

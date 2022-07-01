@@ -48,3 +48,11 @@
         </div>
     </div>
 </nav>
+
+<!--alert msg-->
+{{#msg}} <!--msg의 등록된 데이터가있다면 이것을 출력!-->
+    <div class="alert alert-primary alert-">
+        {{msg}}
+        <button type="button" class="btn-class" data-bg-dismiss="alert" aria-label="Close"></button>
+    </div>
+{{/msg}}
