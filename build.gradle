@@ -12,7 +12,10 @@ repositories {
 	mavenCentral()
 }
 
-dependencies { /*사용 되어지는 라이브러리 추가하는곳! 프로젝트 생성할 때 도구 추가했던 것들이 여기있음!
+dependencies {
+    implementation 'org.projectlombok:lombok:1.18.22'
+	implementation 'org.projectlombok:lombok:1.18.22'
+/*사용 되어지는 라이브러리 추가하는곳! 프로젝트 생성할 때 도구 추가했던 것들이 여기있음!
 	   롬복 추가! */
 
 	compileOnly 'org.projectlombok:lombok'

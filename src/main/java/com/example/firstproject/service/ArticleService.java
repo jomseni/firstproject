@@ -22,10 +22,13 @@ public class ArticleService {
 
     //재료다가져와~
     public List<Article> index() {
-       return articleRepository.findAll(); //요리사가 repository를 통해 데이터(재료)를 가져오게함!
+
+        return articleRepository.findAll(); //요리사가 repository를 통해 데이터(재료)를 가져오게함!
     }
+
     //단건조회(재료몇개가져와~)
     public Article show(Long id) { //보조요리사와 웨이터는 만날일이없어!!!!!!요리사가시키는거야!
+
         return  articleRepository.findById(id).orElse(null);
     }
 
@@ -53,14 +56,13 @@ public class ArticleService {
             return null;
 
         }
-
-        //4: 업데이트
+        //4: 업데이트 (원래있던거 그대로 사용하기) , 나머지만 수정
         target.patch(article);///////////추가된코드
         Article updated = articleRepository.save(target);//////변경된코드 (article-> target)
         return updated;
     }
 
-    public Article delete(Long id) {  //주방장은 요리주문취소됐으니깐 DB찾아서 지워
+    public Article delete(Long id) {  //주방장은 요리주문 취소 됐으니깐 DB찾아서 지워
         // 대상 찾기
         Article target = articleRepository.findById(id).orElse(null);
         //잘못된 요청 처리
