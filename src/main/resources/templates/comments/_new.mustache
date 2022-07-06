@@ -1,0 +1,64 @@
+<!--부트스트랩을 이용한 댓글 생성 모양 양식-->
+<div class="card m-2" id="comments-new">
+    <div class="card-body">
+        <!--댓글 작성 폼-->
+        <form>
+            <div class="mb-3">
+                <label class="form-label">닉네임</label>
+                <input class="form-control form-control-sm" id="new-comment-nickname">
+            </div>
+        <!--댓글 본문 입력-->
+            <div class="mb-3">
+                <label class="form-label">댓글 내용</label>
+                <textarea class="form-control form-control-sm" rows="3" id="new-comment-body"></textarea>
+            </div>
+
+        <!--히든 인풋-->
+        {{#article}}
+            <input type="hidden" id="new-comment-article-id" value="{{id}}">
+        {{/article}}
+
+        <!--전송 버튼-->
+            <button type="button" class="btn btn-outline-primary btn-sm" id="comment-create-btn">댓글 작성</button>
+        </form>
+    </div>
+</div>
+
+<script>
+{
+<!--    댓글 생성 버튼 변수화(id가 comment-create-btn인 대상)-->
+      const commentCreateBtn = document.querySelector("#comment-create-btn"); //querySelecotr를 통해서 html에 있는 어떤 문서의 내용을 가져온다!
+<!--    댓글 작성 버튼 변수화, document에서 id가 #comment-create-btn인 애를 가져온다(querySelector)를 통해서!-->
+<!--    버튼 클릭 이벤트를 감지-->
+      commentCreateBtn.addEventListener("click", function(){
+
+<!--     "클릭" 이벤트가 감지된다면 function을 수행하게함!-->
+        console.log("버튼이 감지 되었습니다");
+
+<!--        새 댓글 객체 생성 -->
+        const comment ={
+        nickname: document.querySelector("#new-comment-nickname").value,   //id 값 를 가져올땐 #치고 그다음  정해진 id 작성
+        body : document.querySelector("#new-comment-body").value,
+        article_id: document.querySelector("#new-comment-article-id").value
+        };
+
+        //댓글 객체 출력
+        console.log(comment);
+
+        //fetch() - Talend API 요청을 JavaScript로 보내준다!
+        const url = "/api/articles/" + comment.article_id + "/comments";
+        fetch(url, {
+            method : "post", //어떻게 보낼지에 대한 자세한 내용을 추가한다(POST요청)
+            body : JSON.stringify(comment),      //JSON으로 변환해서 보낸다.talend api에서 적은거처럼 적용된다 JSON 형식!comment JS 객체를 JSON 형식으로 변경 하여 보냄
+            headers : {
+            "Content-Type" : "application/json" }   //body에 실어서 보낸게 body내용물이 json타입이다! 라는거를 말해주는것이다!
+        }).then(response => {
+            //http 응답 코드에 따른 메세지 출력
+            const msg = (response.ok) ? "댓글이 등록되었습니다." : "댓글 등록 실패...!";
+            alert(msg); //alert는 자바스크립트 함수
+            //현재 페이지 새로고침
+            window.location.reload();  //지금보고있는 페이지 새로고침 되는 코드
+        });
+    });
+}
+</script>
