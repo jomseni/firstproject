@@ -1,0 +1,13 @@
+<div id="comments-list">
+    {{#commentDtos}}   <!--Dto가 여러개의 데이터라면 이 사이 부분을 여러번 반복해라! -->
+        <div class="card m-2" id="comments-{{id}}">
+            <div class="card-header">
+                {{nickname}}
+            </div>  <!--부트스트랩에서 형식  사용!-->
+
+            <div class="card-body">
+                {{body}}
+            </div>   <!--Dto를 모델에 등록해야 뷰페이지에 사용할데이터 commentdto를 사용하려면 컨트롤러에서 model에 등록을해야한다!!!!전에 했었다! -->
+        </div>
+    {{/commentDtos}}
+</div>

@@ -1,8 +1,10 @@
 package com.example.firstproject.controller;
 
 import com.example.firstproject.dto.ArticleForm;
+import com.example.firstproject.dto.CommentDto;
 import com.example.firstproject.entity.Article;
 import com.example.firstproject.repository.ArticleRepository;
+import com.example.firstproject.service.CommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,9 @@ public class ArticleController {
 
     @Autowired //스프링 부트가 미리 생성해놓은 객체를 가져다가 자동 연결! 31번째 줄 articleRepository 객체를 따로 생성안하고 이것으로 자동 생성연결!
     private ArticleRepository articleRepository; //articleRepository객체가 없어서 아래에서 오류가 생겼으므로 ArticleRepository타입의 객체를 선언해준다
+
+    @Autowired
+    private CommentService commentService; //데이터 목록 조회 부분에서 commentService를 사용하기위해 정의
 
     @GetMapping("/articles/new")
     public String newArticleForm(){   //페이지를 보여주기 위해서 메서드를 만든다
@@ -51,11 +56,12 @@ public class ArticleController {
 
         // 1 : id로 데이터를 가져옴! repository를 통해 가져온다!
         Article articleEntity = articleRepository.findById(id).orElse(null); // 저장 되어있던거 를 다시 가져오므로 SQL에서 자바로 다시바꿔야하므로 사용!repository 이용해서!
+        List<CommentDto> commentDtos = commentService.comments(id);
         //아이디 값을 통해 찾았는데 해당아이디 값 없으면 null을 반환한다의 뜻!
 
         // 2 : 가져온 데이터를 모델에 등록!
         model.addAttribute("article",articleEntity); //article이라는 이름으로 articleEntity 등록!
-
+        model.addAttribute("commentDtos",commentDtos);
         // 3 : 보여줄 페이지를 설정!
         return "articles/show";
     }
