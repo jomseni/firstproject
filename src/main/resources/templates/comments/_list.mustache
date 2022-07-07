@@ -3,7 +3,18 @@
         <div class="card m-2" id="comments-{{id}}">
             <div class="card-header">
                 {{nickname}}
-            </div>  <!--부트스트랩에서 형식  사용!-->
+                <!--모달 트리거 버튼-->
+                <!--모달 트리거 버튼 속성에 추가를 해서 버튼을 누르면 수정 모달 페이지에서 값들이 적용 되게 한다.-->
+                <button type="button"
+                        class="btn btn-sm btn-outline-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#comment-edit-modal"
+                        data-bs-id="{{id}}"
+                        data-bs-nickname="{{nickname}}"
+                        data-bs-body="{{body}}"
+                        data-bs-article-id="{{articleId}}">수정</button>
+                <!--commentDtos에서 하나하나씩 꺼내와서 담겨진 아이들-->
+            </div>
 
             <div class="card-body">
                 {{body}}
@@ -11,3 +22,99 @@
         </div>
     {{/commentDtos}}
 </div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="comment-edit-modal" tabindex="-1" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">댓글 수정</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!--댓글 수정 폼-->
+                <form>
+                    <!--닉네임 입력-->
+                    <div class="mb-3">
+                        <label class="form-label">닉네임</label>
+                        <input class="form-control form-control-sm" id="edit-comment-nickname">
+                    </div>
+                    <!--댓글 본문 입력-->
+                    <div class="mb-3">
+                        <label class="form-label">댓글 내용</label>
+                        <textarea class="form-control form-control-sm" rows="3" id="edit-comment-body"></textarea>
+                    </div>
+
+                    <!--히든 인풋(뷰페이지 즉 눈에 보이지 않게 하는 부분이라 hidden 속성 적용-->
+                        <input type="hidden" id="edit-comment-id">
+                        <input type="hidden" id="edit-comment-article-id">
+
+
+                    <!--전송 버튼-->
+                    <button type="button" class="btn btn-outline-primary btn-sm" id="comment-update-btn">수정 완료</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--모달에서 가져올수 있도록 자바스크립트 생성-->
+<!--모달 이벤트 처리-->
+<script>
+    //모달 요소 선택
+    const commentEditModal = document.querySelector("#comment-edit-modal");  //id를 가져올땐 #을 사용
+
+    // 모달 이벤트 감지
+    commentEditModal.addEventListener("show.bs.modal",function(event){ //show.bs.modal 이벤트가 발생되었을떄 function을 수행한다.
+        //트리거 버튼 선택(모달이 열리게되었을때 event로 부터 트리거 버튼을 가져옴)
+        const triggerBtn = event.relatedTarget;
+        //데이터 가져오기 ( 모달 트리거 버튼 설정에서 각각 값을 가져온것 그 부분이랑 연결이 되어지는 부분)
+        const id = triggerBtn.getAttribute("data-bs-id");
+        const nickname = triggerBtn.getAttribute("data-bs-nickname");
+        const body = triggerBtn.getAttribute("data-bs-body");
+        const articleId = triggerBtn.getAttribute("data-bs-article-id");
+
+        //데이터를 반영
+        document.querySelector("#edit-comment-nickname").value = nickname;  // id가 edit-comment-nickname인 애를 가져와서 value을 nickname 값으로 바꾸어주면된다.
+        document.querySelector("#edit-comment-body").value = body;  //
+        document.querySelector("#edit-comment-id").value = id;  //
+        document.querySelector("#edit-comment-article-id").value = articleId;  //
+    });
+
+
+    //수정완료 버튼을 눌렀을 때 Dto가 RestApi를 호출하여 데이터를 수정
+{
+    //1 .수정 완료 버튼 (가져오기=전송버튼) , document.querySelecor를 활용하여 id값을 넣어서 가져온다!
+    const commentUpdateBtn=document.querySelector("#comment-update-btn");
+    //2. 클릭 이벤트 감지 및 처리
+    commentUpdateBtn.addEventListener("click",function(){
+        //수정 댓글 객체 생성
+        const comment = {           //자바 스크립트 객체 만들기!
+        id: document.querySelector("#edit-comment-id").value,
+        nickname :  document.querySelector("#edit-comment-nickname").value,
+        body :  document.querySelector("#edit-comment-body").value,
+        article_id :    document.querySelector("#edit-comment-article-id").value
+        };
+        console.log(comment);  //개발도구에서 console로 찍히는거 확인하는 문장
+
+        // 수정 RestApi를 호출한다 - fetch()를 사용하여!( 이 과정을 통해서 자바스크립트로 데이터가 보내지면서 화면상에서 수정한것을 확인할 수 있는 부분이다!)
+        const url = "/api/comments/" + comment.id;  //comment.id 는 수정 댓글 객체의 id 값 이다
+        fetch(url, {     //fetch는 url과 어떠한 객체 블럭을 받음으로 파라미터에 이렇게 두 가지를 작성한다.
+            method: "PATCH",  // PATCH 요청 (대문자로해야함)
+            body : JSON.stringify(comment), // 수정된 댓글 객체를 JSON으로 전달
+            headers : {
+            "Content-Type": "application/json"
+            }
+        }).then(response => {
+            //http 응답 코드에 따른 메세지 출력
+            const msg = (response.ok) ? "댓글이 수정 되었습니다." : "댓글 수정 실패..!";
+            alert(msg);
+            //현재 페이지를 새로고침
+            window.location.reload();
+        });
+    });
+}
+</script>
