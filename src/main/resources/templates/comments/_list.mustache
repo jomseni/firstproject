@@ -14,6 +14,12 @@
                         data-bs-body="{{body}}"
                         data-bs-article-id="{{articleId}}">수정</button>
                 <!--commentDtos에서 하나하나씩 꺼내와서 담겨진 아이들-->
+
+                <!--댓글 삭제 버튼 -->
+                <!--comment-delete-btn는 클래스 명이다-->
+                <button type="button"
+                        class="btn btn-sm btn-outline-danger comment-delete-btn"
+                        data-comment-id="{{id}}">삭제</button>  <!--삭제 할 댓글의 id값을 알았으니, 자바스크립트에서 끌어가져온다-->
             </div>
 
             <div class="card-body">
@@ -114,6 +120,43 @@
             alert(msg);
             //현재 페이지를 새로고침
             window.location.reload();
+        });
+    });
+}
+</script>
+
+
+<!--댓글 삭제를 위한 자바스크립트-->
+<script>
+{
+    // 삭제 버튼 선택
+    const commentDeleteBtns = document.querySelectorAll(".comment-delete-btn"); //클래스값으로 선택 하기 .클래스명 (css문법), querySelector으로만 쓰면 제일 먼저 있는 버튼 하나만 반응한다
+    //따라서 querySelectorAll 로 바꿔야함
+    // 삭제 버튼 이벤트를 처리
+    commentDeleteBtns.forEach(btn => {   //forEach == 각각을 반복해라!, 첫번째의 삭제 버튼이 btn 변수 대입되어졌을떄 {}의 함수를 실행할것이다.
+        //각 버튼의 이벤트 처리를 등록
+        btn.addEventListener("click", (event) => {  //function() = ()
+            //이벤트 발생 요소를 선택 = 버튼을 가져온다
+           const commentDeleteBtn =  event.srcElement;  //발생한 event의 source element를 가져옴
+           //삭제 댓글 id 가져오기
+           const commentId = commentDeleteBtn.getAttribute("data-comment-id");
+           console.log(`삭제 버튼 클릭 : ${commentId}번 댓글`);   //문자열출력 `` = "" 같다.. ,"삭제 버튼 클릭: " + commentId + "번 댓글"와 같은 뜻이다
+           //삭제 API 호출 및 처리
+           const url = `/api/comments/${commentId}`; //백틱 숫자 1번 왼쪽~ `
+           fetch(url, {
+            method : "DELETE"
+           }).then(response => {
+            //댓글 삭제 실패 처리
+            if (!response.ok) {
+            alert("댓글 삭제 실패...!!");
+            return;
+            }
+
+            //삭제 성공시, 댓글을 화면에서지움!
+            // window.location.reload(); //페이지 새로고침   ,  이거랑 타겟리무브 차이는?????과제입니다~~~~
+            const target = document.querySelector(`#comments-${commentId}`);  //대상 찾기
+            target.remove();
+            });
         });
     });
 }
