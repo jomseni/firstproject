@@ -20,15 +20,13 @@ public class ArticleApiController {
     private ArticleService articleService;
 
     //    private ArticleRepository articleRepository; //객체
-//
-    //GET메서드 (목록조회)
-    @GetMapping("/api/articles")
-    public List<Article> index() {
-        return articleService.index();
-    }
 
-    //
-//
+    //GET메서드 (목록조회)
+    @GetMapping("/api/articles") // 이렇게 요청 받는 것은 웨이터(컨트롤러)
+    public List<Article> index() {
+        //기존에는 repository를 통해서 재료를 가져오게 했지만 이젠 service를 통해 가져오게 한다.
+        return articleService.index(); //보조요리사와 만날 일 없어! 주방장(service)이 시킨다! repository에게!
+    }
     //단일 article 가져오기(단건 조회)
     @GetMapping("/api/articles/{id}")
     public Article show(@PathVariable Long id) {
@@ -41,25 +39,25 @@ public class ArticleApiController {
     public ResponseEntity<Article> create(@RequestBody ArticleForm dto) { //RestAPI에서 JSON으로 던질때는 @RequestBody가 있어야 받아진다!
         Article created = articleService.create(dto);
         return (created != null) ?
-                ResponseEntity.status(HttpStatus.OK).body(created) :
+                ResponseEntity.status(HttpStatus.OK).body(created) :      //3항연산자 , 비어있다면 상태를 200반환하고 create를 담아서 repository에 보낸다.
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
     }
 
-    //PATCH
-    @PatchMapping("/api/articles/{id}")
+    //PATCH 수정
+    @PatchMapping("/api/articles/{id}") //주문받아오기 -> 컨트롤러의 역할
     public ResponseEntity<Article> update(@PathVariable Long id, @RequestBody ArticleForm dto) { //상태코드를 같이 리턴하기위해 ResponseEntity<Article>로 바꿔준다.
 
         Article updated = articleService.update(id, dto);  //주방장아 업데이트해줘~ 컨트롤러의 역할(웨이터)
+
+        //웨이터는 주문을 받고 이렇게 가져다 주기만 하면 돼!
         return (updated != null) ?
                 ResponseEntity.status(HttpStatus.OK).body(updated) :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    //
-//
-//    //DELETE
-//      //웨이터가 요리까지 하는건 너무 복잡해!!!!!
+    //DELETE
+    //웨이터가 요리까지 하는건 너무 복잡해!!!!!
     //웨이터는 받고 반환만 하면된다!
     @DeleteMapping("/api/articles/{id}")
     public ResponseEntity<Article> delete(@PathVariable Long id) {
@@ -73,7 +71,7 @@ public class ArticleApiController {
 
     //트랜잭션(반드시 성공해야하는 일련의과정) -> 실패 -> 롤백!!!
     @PostMapping("/api/transaction-test")
-    public ResponseEntity<List<Article>> transactionTest(@RequestBody List<ArticleForm> dtos){
+    public ResponseEntity<List<Article>> transactionTest(@RequestBody List<ArticleForm> dtos){ //JSON파일을 받아오므로 requestbody를 써줘야한다.
         List<Article> createdList =articleService.createArticles(dtos);
         return (createdList != null) ?
                 ResponseEntity.status(HttpStatus.OK).body(createdList) :

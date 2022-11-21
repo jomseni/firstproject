@@ -41,12 +41,11 @@ public class ArticleController {
         //1. Dto를 변환! Entity로! 컨트롤러를 통해!
         Article article = form.toEntity();     //toEntity메서드를 호출해서 article 이라는 타입의 Entity를 반환해오는 방식!
         log.info(article.toString());       //println라인을 대체한다! 로깅을 통해서! 이것 또한 리팩토링으로 볼 수 있다!
-        //System.out.println(article.toString()); //Dto가 Entity로 잘 변환 되었는지 확인!
+
 
         //2. Repository에게 Entity를 DB안에 저장하게 함!
         Article saved = articleRepository.save(article); // articleRepository가 save메서드를 실행하게한다. article데이터를 세이브하게 하여 세이브 한 것을 반환한다 . Article Entity타입으로 saved 이름을 가지고 반환하게 한다.
         log.info(saved.toString()); //마찬가지로 println 자리에 로깅을 사용한다!
-        //System.out.println(saved.toString());         //article이 잘 save가 되었는지 확인!
         return "redirect:/articles/" + saved.getId();          //리다이렉트 적용 부분!
     }
     // 아랫 부분은 데이터 목록 조회하기!

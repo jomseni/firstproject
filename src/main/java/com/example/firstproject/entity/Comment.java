@@ -18,8 +18,6 @@ public class Comment {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)   //DB가 자동으로 하나씩 증가 하게 생성하기 위한  어노테이션!
     private  Long id;
 
-
-
     //부모게시글에 대한 설정을 위한 어노테이션!
     @ManyToOne  //댓글입장에서 보기! 다대일 관계! 여러개의 댓글에 하나의 게시글에 달림, 해당 댓글 엔티티 여러개가, 하나의 Article에 연관된다!
     @JoinColumn(name = "article_id")  //테이블에서 연결된 대상정보를 가져와야하기 때문에 작성한다!,"artcleid" 컬럼에 Article의 대표값을 저장!
