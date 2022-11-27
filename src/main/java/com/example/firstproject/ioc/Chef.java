@@ -14,7 +14,8 @@ public class Chef {
     }
 
     public String cook(String menu) {  //요리사가 하는일!
-        // 요리 재료 준비
+
+        // 요리 재료 준비 , factory에서 식재료를 반환해주는데 menu에들어가는 것을 반환 해준다.
         Ingredient ingredient = ingredientFactory.get(menu); //메뉴에 상관없이 공장에서 그 재료를 반환 할 수 있게해준다 , Ingredient는 pork와 beef의 부모 클래스가 된다
         // 요리 반환
 

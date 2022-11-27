@@ -19,8 +19,6 @@ public class ArticleApiController {
     @Autowired  //객체를 연결해주는 어노테이션 연결해준다!자유롭게 객체를 사용할 수있 게해준다, DI = 외부에서 가져온다는 뜻!(data.sql),생성 객체를 가져와 연결!
     private ArticleService articleService;
 
-    //    private ArticleRepository articleRepository; //객체
-
     //GET메서드 (목록조회)
     @GetMapping("/api/articles") // 이렇게 요청 받는 것은 웨이터(컨트롤러)
     public List<Article> index() {
@@ -33,7 +31,7 @@ public class ArticleApiController {
         return articleService.show(id);
     }
 
-    //
+
     //POST 새로 생성하는 요청!
     @PostMapping("/api/articles")
     public ResponseEntity<Article> create(@RequestBody ArticleForm dto) { //RestAPI에서 JSON으로 던질때는 @RequestBody가 있어야 받아진다!

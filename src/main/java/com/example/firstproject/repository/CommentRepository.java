@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface CommentRepository extends JpaRepository<Comment, Long> { //page처리도 할 수 있고 Sorting도 할 수 있는 repository
+public interface CommentRepository extends JpaRepository<Comment, Long> { //page처리도 할 수 있고 Sorting도 할 수 있는 repository, 첫 번째 인수는 관리할 대상,두 번째 인수에는  PK의 타입
     //특정 게시글의 모든 댓글 조회(SQL작성)
     @Query(value = "SELECT * " +
             "FROM comment" +

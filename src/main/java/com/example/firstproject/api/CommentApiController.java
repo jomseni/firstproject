@@ -23,7 +23,7 @@ public class CommentApiController {
         List<CommentDto> dtos = commentService.comments(articleId); // articleId 값을 입력값으로 해서 Comment값을 Dto로 바꾼 것의 묶음을 반환할 것이다.
 
         //결과 응답 , 무조건 잘 반환이 된다는 가정하에 리턴값 (rest컨트롤러에서 반환하는것이다 dto로)
-       return ResponseEntity.status(HttpStatus.OK).body(dtos); //
+       return ResponseEntity.status(HttpStatus.OK).body(dtos);
     }
 
     // 댓글 생성 (함수 create 사용)
