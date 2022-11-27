@@ -6,6 +6,7 @@ import com.example.firstproject.entity.Article;
 import com.example.firstproject.entity.Comment;
 import com.example.firstproject.repository.ArticleRepository;
 import com.example.firstproject.repository.CommentRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class CommentService {
 
     @Autowired
@@ -50,15 +52,21 @@ public class CommentService {
     // 댓글 생성하기!!!댓글 생성이므로 (DB에 변환가있으므로) 트랜잭션 처리해야함
     @Transactional
     public CommentDto create(Long articleId, CommentDto dto) {
-    // 게시글 조회 및 예외 발생, article이 있으면 순차적으로 수행되지만 없다면 예외가 발생해서 그 다음 아래 순서들이 수행 되지 않는 것이다!
-    Article article=articleRepository.findById(articleId).orElseThrow(() -> new IllegalArgumentException("댓글 생성 실패! 대상 게시글이 없습니다!"));// orElseThrow --> 없다면 예외를 발생 시킨다
-    // 댓글 엔티티 생성 (Comment 엔티티에 createComment라는  생성 메서드가 없으므로 메서드를 만들어주어야한다!)
-       Comment comment = Comment.createComment(dto,article); //Comment클래스에서 createComment수행(dto와 article)을 던졌을때 comment를 만들었으면 좋겠어!
-    // 댓글 엔티티를 DB로 저장
-    Comment created = commentRepository.save(comment); //comment 엔티티를 저장한다 commentRepository를 통해서
-    //DTO로 변경하여 반환
-        return CommentDto.createCommentDto(created);
+//        log.info("입력값 => {}: ",articleId);
+//        log.info("입력값 => {}: ",dto);
+        // 게시글 조회 및 예외 발생, article이 있으면 순차적으로 수행되지만 없다면 예외가 발생해서 그 다음 아래 순서들이 수행 되지 않는 것이다!
+        Article article=articleRepository.findById(articleId).orElseThrow(() -> new IllegalArgumentException("댓글 생성 실패! 대상 게시글이 없습니다!"));// orElseThrow --> 없다면 예외를 발생 시킨다
+        // 댓글 엔티티 생성 (Comment 엔티티에 createComment라는  생성 메서드가 없으므로 메서드를 만들어주어야한다!)
+           Comment comment = Comment.createComment(dto,article); //Comment클래스에서 createComment수행(dto와 article)을 던졌을때 comment를 만들었으면 좋겠어!
+        // 댓글 엔티티를 DB로 저장
+        Comment created = commentRepository.save(comment); //comment 엔티티를 저장한다 commentRepository를 통해서
+        //DTO로 변경하여 반환
+            return CommentDto.createCommentDto(created);
 
+            //반환되는 값 로그 찍기(이렇게 적어도되는데 이것이 다른 부분에서 반복되는 코드이기때문에 AOP 사용을 위해 지운다(주석처리)
+//        CommentDto createdDto = CommentDto.createCommentDto(created);
+//        log.info("반환 값 => {}", createdDto);
+//        return createdDto;
     }
 
     @Transactional //롤백 처리!!! 데이터를 건드리므로!

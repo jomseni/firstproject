@@ -1,5 +1,6 @@
 package com.example.firstproject.api;
 
+import com.example.firstproject.annotation.RunningTime;
 import com.example.firstproject.dto.CommentDto;
 import com.example.firstproject.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,7 @@ public class CommentApiController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedDto); //만약 ok가 아니라면 update 함수 내부에서 에외 발생으로 처리할것이다 위에 create 함수처럼!
     }
     // 댓글 삭제 (함수 delete 사용)
+    @RunningTime
     @DeleteMapping("/api/comments/{id}")
     public ResponseEntity<CommentDto> delete(@PathVariable Long id /* 제이슨을 받아오지 않으므로 이건 없어도됌@RequestBody CommentDto dto*/) {
         // 서비스에게 위임

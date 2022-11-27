@@ -136,7 +136,7 @@
     // 삭제 버튼 이벤트를 처리
     commentDeleteBtns.forEach(btn => {   //forEach == 각각을 반복해라!, 첫번째의 삭제 버튼이 btn 변수 대입되어졌을떄 {}의 함수를 실행할것이다.
         //각 버튼의 이벤트 처리를 등록
-        btn.addEventListener("click", (event) => {  //function() = ()
+        btn.addEventListener("click", (event) => {  // function() = ()
             //이벤트 발생 요소를 선택 = 버튼을 가져온다
            const commentDeleteBtn =  event.srcElement;  //발생한 event의 source element를 가져옴
            //삭제 댓글 id 가져오기
